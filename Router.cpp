@@ -112,7 +112,7 @@ int main()
 						struct sockaddr_in caddr;
 						int len=sizeof(caddr);
 
-						int c=accept(sockfd,(struct sockaddr *)&caddr,&len);	//Accept new client connections
+						int c=accept(sockfd,(struct sockaddr *)&caddr,(socklen_t *)&len);	//Accept new client connections
 						if(c<0)
 						{
 							continue;
