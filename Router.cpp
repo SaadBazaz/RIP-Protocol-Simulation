@@ -14,19 +14,21 @@ using namespace std;
 #define MAXFD 10	//Size of fds array
 
 struct TableRow {
-    std::string identifier;
+    int identifier;
+    int client;
+    int fd;
     int hop_count;
 
-    TableRow (std::string id, int hc): identifier(id), hop_count(hc){}
+    TableRow (int id,int r,int f, int hc): identifier(id),client(r),fd(f), hop_count(hc){}
 };
 
 std::vector<TableRow> table;
 
 void printTable(){
-    cout<<"Identifier\tHop Count"<<endl;
-    cout<<"-------------------------------"<<endl;
+    cout<<"Identifier\tClient\tFD\tHop Count"<<endl;
+    cout<<"----------------------------------------------------"<<endl;
     for (int i=0; i<table.size(); i++){
-        cout<<table[i].identifier<<"\t\t"<<table[i].hop_count<<endl;
+        cout<<table[i].identifier<<"\t\t"<<table[i].client<<"\t"<<table[i].fd<<"\t"<<table[i].hop_count<<endl;
     }
 }
 
@@ -46,10 +48,9 @@ void fds_add(int fds[],int fd)	//Add a file descriptor to the fds array
 
 int main()
 {
-    TableRow myself ("1", 0);
-    table.push_back(myself);
-
-    printTable();
+    int port;
+    cout<<"Which Port Do you want to use ?\n";
+    cin >> port;
 
 	int sockfd=socket(AF_INET,SOCK_STREAM,0);
 	assert(sockfd!=-1);
@@ -59,7 +60,7 @@ int main()
 	struct sockaddr_in saddr,caddr;
 	memset(&saddr,0,sizeof(saddr));
 	saddr.sin_family=AF_INET;
-	saddr.sin_port=htons(6000);
+	saddr.sin_port=htons(port);
 	saddr.sin_addr.s_addr=inet_addr("127.0.0.1");
 
 	int res=bind(sockfd,(struct sockaddr*)&saddr,sizeof(saddr));
@@ -146,6 +147,9 @@ int main()
 					
 						printf("accept c=%d\n",c);
 						fds_add(fds,c);//Add the connection socket to the array where the file descriptor is stored
+                        TableRow newClient (port,c-3,fds[i],0);
+                        table.push_back(newClient);
+                        printTable();
 					}
 					else   //Receive data recv when an existing client sends data
 					{

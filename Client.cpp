@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include <iostream>
 #include<stdlib.h>
 #include<unistd.h>
 #include<string.h>
@@ -6,9 +7,12 @@
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<arpa/inet.h>
-
+using namespace std;
 int main()
 {
+    int port;
+    cout <<"Which server do you want to connect to ?\n";
+    cin >> port;
 	int sockfd = socket(AF_INET,SOCK_STREAM,0);	
 	assert(sockfd != -1 );
 
@@ -16,7 +20,7 @@ int main()
 	struct sockaddr_in saddr;
 	memset(&saddr,0,sizeof(saddr));
 	saddr.sin_family = AF_INET;
-	saddr.sin_port = htons(6000);
+	saddr.sin_port = htons(port);
 	saddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
 	//Link to server
