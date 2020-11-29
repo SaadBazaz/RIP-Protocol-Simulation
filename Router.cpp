@@ -1,15 +1,20 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h>
-#include<string.h>
+#include<string>
 #include<assert.h>
 #include<arpa/inet.h>
 #include<netinet/in.h>
 #include<sys/socket.h>
 #include<sys/time.h>
-
+#include <vector>
+using namespace std;
 #define MAXFD 10	//Size of fds array
-
+struct TableRow {
+    string identifier;
+    int hop;
+};
+vector<TableRow> RoutingTable;
 void fds_add(int fds[],int fd)	//Add a file descriptor to the fds array
 {
 	int i=0;
