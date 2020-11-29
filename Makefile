@@ -7,4 +7,4 @@ objects = Router Client
 all: $(objects)
 
 $(objects): %: %.cpp
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o ./executable/$@ $<
