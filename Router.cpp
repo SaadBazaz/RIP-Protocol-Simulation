@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<iostream>
 #include<stdlib.h>
 #include<unistd.h>
 #include<string>
@@ -7,14 +8,29 @@
 #include<netinet/in.h>
 #include<sys/socket.h>
 #include<sys/time.h>
-#include <vector>
+#include<vector>
+
 using namespace std;
 #define MAXFD 10	//Size of fds array
+
 struct TableRow {
-    string identifier;
-    int hop;
+    std::string identifier;
+    int hop_count;
+
+    TableRow (std::string id, int hc): identifier(id), hop_count(hc){}
 };
-vector<TableRow> RoutingTable;
+
+std::vector<TableRow> table;
+
+void printTable(){
+    cout<<"Identifier\tHop Count"<<endl;
+    cout<<"-------------------------------"<<endl;
+    for (int i=0; i<table.size(); i++){
+        cout<<table[i].identifier<<"\t\t"<<table[i].hop_count<<endl;
+    }
+}
+
+
 void fds_add(int fds[],int fd)	//Add a file descriptor to the fds array
 {
 	int i=0;
@@ -30,6 +46,11 @@ void fds_add(int fds[],int fd)	//Add a file descriptor to the fds array
 
 int main()
 {
+    TableRow myself ("1", 0);
+    table.push_back(myself);
+
+    printTable();
+
 	int sockfd=socket(AF_INET,SOCK_STREAM,0);
 	assert(sockfd!=-1);
 	

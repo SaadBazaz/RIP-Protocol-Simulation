@@ -22,7 +22,7 @@ int main()
 	//Link to server
 	int res = connect(sockfd,(struct sockaddr*)&saddr,sizeof(saddr));
 	assert(res != -1);
-
+    
 	while(1)
 	{
 		char buff[128] = {0};
