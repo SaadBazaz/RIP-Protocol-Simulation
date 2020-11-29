@@ -1,14 +1,35 @@
 #include<stdio.h>
+#include<iostream>
 #include<stdlib.h>
 #include<unistd.h>
-#include<string.h>
+#include<string>
 #include<assert.h>
 #include<arpa/inet.h>
 #include<netinet/in.h>
 #include<sys/socket.h>
 #include<sys/time.h>
+#include<vector>
 
+using namespace std;
 #define MAXFD 10	//Size of fds array
+
+struct TableRow {
+    std::string identifier;
+    int hop_count;
+
+    TableRow (std::string id, int hc): identifier(id), hop_count(hc){}
+};
+
+std::vector<TableRow> table;
+
+void printTable(){
+    cout<<"Identifier\tHop Count"<<endl;
+    cout<<"-------------------------------"<<endl;
+    for (int i=0; i<table.size(); i++){
+        cout<<table[i].identifier<<"\t\t"<<table[i].hop_count<<endl;
+    }
+}
+
 
 void fds_add(int fds[],int fd)	//Add a file descriptor to the fds array
 {
@@ -25,6 +46,11 @@ void fds_add(int fds[],int fd)	//Add a file descriptor to the fds array
 
 int main()
 {
+    TableRow myself ("1", 0);
+    table.push_back(myself);
+
+    printTable();
+
 	int sockfd=socket(AF_INET,SOCK_STREAM,0);
 	assert(sockfd!=-1);
 	
