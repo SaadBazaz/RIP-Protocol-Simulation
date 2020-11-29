@@ -10,8 +10,7 @@ int main(){
 
     string message;
     do{
-    cout<<"YOU: ";
-    cin.ignore();
+    cout<<"YOU: ";    
     getline(cin, message, '\n');
     }    while (message != "exit");
 }
