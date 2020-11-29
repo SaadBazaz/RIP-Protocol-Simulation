@@ -12,5 +12,5 @@ int main(){
     do{
     cout<<"YOU: ";    
     getline(cin, message, '\n');
-    }    while (message != "exit");
+    }    while (message != "close");
 }
