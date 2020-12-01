@@ -29,6 +29,8 @@ int main()
     
 	while(1)
 	{
+        cout << "Clients Available : \n";
+        cout << "Which Client to send message : ";
 		char buff[128] = {0};
 		printf("Please Input:");
 		fgets(buff,128,stdin);
