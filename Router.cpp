@@ -9,26 +9,18 @@
 #include<sys/socket.h>
 #include<sys/time.h>
 #include<vector>
-
+#include "RoutingTable.h"
 using namespace std;
 #define MAXFD 10	//Size of fds array
 
-struct TableRow {
-    int identifier;
-    int client;
-    int fd;
-    int hop_count;
-
-    TableRow (int id,int r,int f, int hc): identifier(id),client(r),fd(f), hop_count(hc){}
-};
 
 std::vector<TableRow> table;
 
 void printTable(){
-    cout<<"Identifier\tClient\tFD\tHop Count"<<endl;
+    cout<<"Identifier\tClient\tFD\tHop Count\tIn Use?"<<endl;
     cout<<"----------------------------------------------------"<<endl;
     for (int i=0; i<table.size(); i++){
-        cout<<table[i].identifier<<"\t\t"<<table[i].client<<"\t"<<table[i].fd<<"\t"<<table[i].hop_count<<endl;
+        cout<<table[i].identifier<<"\t\t"<<table[i].client_name<<"\t"<<table[i].fd<<"\t"<<table[i].hop_count<<"\t\t"<<(table[i].in_use ? "Yes":"No")<<endl;
     }
 }
 
@@ -147,7 +139,7 @@ int main()
 					
 						printf("accept c=%d\n",c);
 						fds_add(fds,c);//Add the connection socket to the array where the file descriptor is stored
-                        TableRow newClient (port,c-3,fds[i],0);
+                        TableRow newClient (port,c-3,fds[i],0,"CLIENT");
                         table.push_back(newClient);
                         printTable();
 					}
