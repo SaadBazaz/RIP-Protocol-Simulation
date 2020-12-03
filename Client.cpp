@@ -105,7 +105,9 @@ int main()
 			cout << "Enter Domain Name : \n>>";
 			cin.ignore();
 			fgets(buff,128,stdin);
-			message = constructNewMessage(MESSAGE, myip, DNS_IP, (void*)buff );
+			string finalMessage = "DNS REQ ";
+			finalMessage += buff;
+			message = constructNewMessage(MESSAGE, myip, DNS_IP, (void*)finalMessage.c_str() );
 		}
 		
 		send(sockfd,message.c_str(),message.size(),0);
@@ -116,7 +118,7 @@ int main()
 		}
 
 		memset(buff, 0, 128);
-		
+
 	}
 	close(sockfd);
 }

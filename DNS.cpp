@@ -115,19 +115,20 @@ int main()
             {
                 domainName += data[3][i];
             }*/
-
-            cout << "Domain Requested: " << data[3] << endl;
-            while (data[3].back() == '\n')
+            string domainName = tokenizeData(data[3],' ')[2];
+            cout << "Domain Requested: " <<domainName << endl;
+            while (domainName.back() == '\n')
             {
-                data[3].pop_back();
+                domainName.pop_back();
             }
             
-            int pos = SearchDomain(data[3],List);
+            int pos = SearchDomain(domainName,List);
             string message;
             if (pos != -1)
             {
                 cout << "IP Address to be Delivered : "<< List[pos].IPAddress << endl;
-                message = constructNewMessage(MESSAGE, myip , stoi(data[1]),(void*)List[pos].IPAddress);
+                string Response = "DNS RES " + List[pos].DomainName + " " + List[pos].IPAddress;
+                message = constructNewMessage(MESSAGE, myip , stoi(data[1]),(void*)Response.c_str());
                 send(sockfd,message.c_str(),message.size(),0);
             }
             else
