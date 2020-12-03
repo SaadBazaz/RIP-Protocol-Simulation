@@ -11,12 +11,13 @@
 #include <vector>
 #include "RoutingTable.h"
 #include "RIPv0.h"
+#include "DNS_FILE.h"
 using namespace std;
 #define MAXFD 10 //Size of fds array
 
 std::vector<TableRow> table;
 int port;
-
+std::vector<Directory> List;
 void printTable()
 {
 	cout << "Identifier\tFD\tHop Count\tIn Use?" << endl;
@@ -134,7 +135,17 @@ void sendTableToAllRouters(int ignore_fd = -1){
 }
 
 
-
+int SearchDomain(string Dom,vector<Directory> List){
+    for(int i = 0;i < List.size();i++){
+        
+        cout<<"Matching '"<<Dom<<"' with "<<List[i].DomainName<<endl;
+        if (Dom == List[i].DomainName)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
 
 
 void handlePacket(const int &client, string packet)
@@ -310,6 +321,53 @@ void handlePacket(const int &client, string packet)
 
 	case MESSAGE:
 	{
+        vector<string> Command = tokenizeData(vec[3],' ');
+        if (Command[0]=="DNS")
+        {
+            if(Command[1]=="REQ"){
+                while (Command[2].back() == '\n')
+                {
+                    Command[2].pop_back();
+                }
+                for (size_t i = 0; i < List.size(); i++)
+                {
+                    if (Command[2]==List[i].DomainName)
+                    {
+                        string Response = "DNS RES " + List[i].DomainName + " " + List[i].IPAddress;
+                        string message = constructNewMessage(MESSAGE, port,stoi(vec[1]),(void*)Response.c_str());
+                        cout << "Proxy Intervenes ...\n";
+                        send(client, message.c_str(), strlen(message.c_str()), 0);
+                        return;
+                    }
+                    
+                }
+                
+            }
+            else if (Command[1] == "RES"){
+                cout << "Checking Response ... \n";
+                int index = SearchDomain(Command[2],List);
+                
+                if (index < 0)
+                {
+                    Directory Entry ;
+                    Entry.DomainName = Command[2] ;
+                    for (size_t i = 0; i < 128; i++)
+                    {
+                        Entry.IPAddress[i] = Command[3][i];
+                    }
+                    List.push_back(Entry);
+                    cout << "Saved the Entry in Cache ... \n";
+                }
+                else{
+                    for (size_t i = 0; i < 128; i++)
+                    {
+                        List[index].IPAddress[i] = Command[3][i];
+                    }
+                }
+                
+            }
+        }
+        
 		int index = findRowByID_MinHopCount(stoi(vec[2]));
 
 		if (index < 0)
