@@ -172,12 +172,18 @@ void handlePacket(const int &client, string packet)
 			for (int i=0; i<table.size(); i++){
 				if (table[i].identifier == -1){
 					table.erase (table.begin() + i);
+					i--;
 				}
 			} 
 
 			table_row.fd = client;
+			if (table_row.hop_count < 0)
+			{
+				table_row.hop_count = 0;
+			}
+			
 			table.push_back(table_row);
-
+			printTable();
 			break;
 		}
 

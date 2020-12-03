@@ -102,7 +102,7 @@ int main()
 			cout << "Enter DNS IP  : ";
 			cin >> DNS_IP;
 			cout << endl;
-			cout << "Enter Domain Name in the format [dom=<domain name>]\n>>";
+			cout << "Enter Domain Name : \n>>";
 			cin.ignore();
 			fgets(buff,128,stdin);
 			message = constructNewMessage(MESSAGE, myip, DNS_IP, (void*)buff );
@@ -116,9 +116,7 @@ int main()
 		}
 
 		memset(buff, 0, 128);
-		recv(sockfd, buff, 127, 0);
-		printf("RecvBuff:%s\n", buff);
-		printf("\n");
+		
 	}
 	close(sockfd);
 }

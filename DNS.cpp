@@ -23,26 +23,9 @@ or listen to one socket only.
 
 
 int sockfd;
-pthread_t listener_thread;
 
 
-/*
-Listens to messages from the router it is connected to
-*/
-void* messageListener (void* Args){
-	// cout<<"Thread start"<<endl;
-	sleep(2);	// Give it some time to start
-	char msg_buff[128] = {0};
-	// cout<<"I'm here"<<endl;
-	do{
-		recv(sockfd,msg_buff,127,0);
-		printf("Received a message: %s\n",msg_buff);
-		printf("\n");
-		// cout<<"In loop";
-		memset(msg_buff,0,128);
-		sleep(2);
-	} while(strcmp(msg_buff,"close") != 0);	
-}
+
 vector<Directory> initiateList(){
     vector<Directory> List;
     Directory entry1 = {"www.google.com","209.85.231.104"};
@@ -106,9 +89,6 @@ int main()
 	int res = connect(sockfd,(struct sockaddr*)&saddr,sizeof(saddr));
 	assert(res != -1);
 
-	cout<<"Creating listening thread..."<<endl;    
-	pthread_create (&listener_thread, NULL, messageListener, (void*)NULL); 
-
 	TableRow myself (myip, -1, "CLIENT", -1, -1, -1, -1, -1);
 
 	cout<<"Sending my unique IP to server..."<<endl;    
@@ -120,14 +100,13 @@ int main()
 	char buff[128] = {0};
 
 	int receiver = -1;
-    int x = 0;
+    
 	while(buff != "close")
 	{
-        ++x;
+
         cout << "Waiting For Request ...\n";
         recv(sockfd,buff,127,0);
-        if (x>1)
-        {
+ 
             // Splitting the Recieved Message into Substrings
             vector<string> data = tokenizeData(buff,'&');
 
@@ -138,7 +117,11 @@ int main()
             }*/
 
             cout << "Domain Requested: " << data[3] << endl;
-            data[3].pop_back();
+            while (data[3].back() == '\n')
+            {
+                data[3].pop_back();
+            }
+            
             int pos = SearchDomain(data[3],List);
             string message;
             if (pos != -1)
@@ -154,8 +137,7 @@ int main()
                 message = constructNewMessage(MESSAGE, myip , stoi(data[1]),(void*)notFound);
                 send(sockfd,message.c_str(),message.size(),0);*/
             }
-        }
-        
+            memset(buff, 0, 128);
         
 	}
 	close(sockfd);
