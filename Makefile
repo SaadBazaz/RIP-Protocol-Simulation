@@ -1,7 +1,7 @@
 # CNET Makefile
 
 CC = g++
-CFLAGS  = -pthread -Wall -g
+CFLAGS  = -pthread -Wall -g -stdlib=libc++
 
 objects = Router Client
 all: $(objects)

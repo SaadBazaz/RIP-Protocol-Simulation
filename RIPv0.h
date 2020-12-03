@@ -3,6 +3,7 @@
 #ifndef RIPv0_H
 #define RIPv0_H
 
+#include <iostream>
 #include <string>
 #include "RoutingTable.h"
 using namespace std;
@@ -49,33 +50,52 @@ string constructNewMessage (short cmd, int src, int dest, void* data){
     string message;
     switch (cmd)
     {
-    case ADD:
-        message += "ADD";
-        TableRow* table_row_data = static_cast<TableRow *> (data);
+    case ADD:{
+        message += to_string(ADD);
         message += '&';
-        message += table_row_data->toString();
-        break;
-    case TABLE:
-        message += "TABLE";
-        break;    
-    case UPDATE:
-        message += "UPDATE";
-        TableRow* table_row_data = static_cast<TableRow *> (data);
+        message += to_string(src);        
         message += '&';
-        message += table_row_data->toString();
-        break;
-    case DELETE:
-        message += "DELETE";
-        break;
-    case MESSAGE:
-        message += "MESSAGE";
+        message += to_string(dest);        
         message += '&';        
-        message += ( * static_cast<string*> (data) );
+        TableRow* table_row_data = static_cast<TableRow *> (data);
+        message += table_row_data->toString();
         break;
-    default:
+        }
+    case TABLE:{
+        message += to_string(TABLE);
+        break;    
+        }
+    case UPDATE:{
+        message += to_string(UPDATE);
+        message += '&';
+        message += to_string(src);        
+        message += '&';
+        message += to_string(dest);        
+        message += '&';        
+        TableRow* table_row_data = static_cast<TableRow *> (data);
+        message += table_row_data->toString();
+        break;
+        }
+    case DELETE:{
+        message += to_string(DELETE);
+        break;
+        }
+    case MESSAGE:{
+        message += to_string(MESSAGE);
+        message += '&';
+        message += to_string(src);        
+        message += '&';
+        message += to_string(dest);        
+        message += '&';   
+        message += (  static_cast<char*> (data) );
+        break;
+        }
+    default:{
         return NULL;
         break;
+        }
     }
+    return message;
 }
 
 #endif
