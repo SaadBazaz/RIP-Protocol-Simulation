@@ -53,6 +53,11 @@ string constructNewMessage (short cmd, int src, int dest, void* data){
         message += "ADD";
         TableRow* table_row_data = static_cast<TableRow *> (data);
         message += '&';
+        message += to_string(src);        
+        message += '&';
+        message += to_string(dest);        
+        message += '&';        
+        TableRow* table_row_data = static_cast<TableRow *> (data);
         message += table_row_data->toString();
         break;
     case TABLE:
