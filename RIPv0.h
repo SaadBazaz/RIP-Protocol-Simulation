@@ -46,6 +46,16 @@ enum COMMAND {
     MESSAGE
 };
 
+
+
+/*
+4&1234&5678&DOM=<domain>&<path> //REQUEST
+4&5678&1234&DOM=<domain>/IP=<ip_address>&<path> //RESPONSE
+*/
+
+
+
+
 string constructNewMessage (short cmd, int src, int dest, void* data){
     string message;
     switch (cmd)
@@ -63,6 +73,12 @@ string constructNewMessage (short cmd, int src, int dest, void* data){
         }
     case TABLE:{
         message += to_string(TABLE);
+        message += '&';
+        message += to_string(src);        
+        message += '&';
+        message += to_string(dest);        
+        message += '&';
+        message += (  static_cast<char*> (data) );
         break;    
         }
     case UPDATE:{

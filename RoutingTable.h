@@ -51,10 +51,10 @@ struct TableRow {
 
 	TableRow (std::string data, char delimiter = ','){
 
-		auto vec = tokenizeData (data);
-		for (int i=0; i<vec.size(); i++){
-			std::cout<<vec[i]<<std::endl;
-		}
+		auto vec = tokenizeData (data, delimiter);
+		// for (int i=0; i<vec.size(); i++){
+		// 	std::cout<<vec[i]<<std::endl;
+		// }
 		identifier = stoi(vec[0]);
 		// int client_name;
 		fd = stoi(vec[1]);
@@ -80,8 +80,61 @@ struct TableRow {
 		;
 	}
 
-
-
+    //overloading '==' operator
+    friend bool operator==(TableRow &t1, TableRow &t2);
 };
+
+/* 
+    Defining the overloading operator function
+    Here we are simply comparing the hour, minute and
+    second values of two different TableRow objects to compare
+    their values
+*/
+bool operator== (TableRow &t1, TableRow &t2)
+{
+    return ( 
+	t1.identifier == t2.identifier && 
+	t1.fd == t2.fd && 
+	t1.status == t2.status && 
+	t1.hop_count == t2.hop_count && 
+	t1.type == t2.type && 
+	t1.in_use == t2.in_use && 
+	t1.send_port == t2.send_port && 
+	t1.receive_port == t2.receive_port 
+	);
+}
+
+
+
+
+std::string serialize (std::vector<TableRow> &table){
+	std::string returnTo;
+	for (int i=0; i<table.size(); i++){
+		returnTo += table[i].toString();
+		if (i+1 != table.size())
+			returnTo += '\n';
+	}
+	return returnTo;
+}
+
+std::vector<TableRow> deserialize (std::string table_string){
+	std::vector <std::string> rows = tokenizeData(table_string, '\n');
+
+	std::vector<TableRow> returnTo; 
+
+	for (int i=0; i<rows.size(); i++){
+		TableRow new_row (rows[i]);
+		returnTo.push_back(new_row);
+	}
+
+	return returnTo;
+}
+
+
+
+
+
+
+
 
 #endif
