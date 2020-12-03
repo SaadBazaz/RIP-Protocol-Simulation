@@ -336,6 +336,16 @@ void handlePacket(const int &client, string packet)
                         string Response = "DNS RES " + List[i].DomainName + " " + List[i].IPAddress;
                         string message = constructNewMessage(MESSAGE, port,stoi(vec[1]),(void*)Response.c_str());
                         cout << "Proxy Intervenes ...\n";
+
+						if (vec.size() == 4){
+							message += '&';
+							message += to_string(port);
+						}
+						else {
+							message += ',';
+							message += to_string(port);			
+						}
+
                         send(client, message.c_str(), strlen(message.c_str()), 0);
                         return;
                     }
@@ -375,8 +385,14 @@ void handlePacket(const int &client, string packet)
 			break;
 		}
 
-		//check
-
+		if (vec.size() == 4){
+			packet += '&';
+			packet += to_string(port);
+		}
+		else {
+			packet += ',';
+			packet += to_string(port);			
+		}
 		// Forward packet to appropriate socket
 		send(table[index].fd, packet.c_str(), strlen(packet.c_str()), 0);
 		break;

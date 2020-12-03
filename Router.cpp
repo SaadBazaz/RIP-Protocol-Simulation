@@ -317,7 +317,14 @@ void handlePacket(const int &client, string packet)
 			break;
 		}
 
-		//check
+		if (vec.size() == 4){
+			packet += '&';
+			packet += to_string(port);
+		}
+		else {
+			packet += ',';
+			packet += to_string(port);			
+		}
 
 		// Forward packet to appropriate socket
 		send(table[index].fd, packet.c_str(), strlen(packet.c_str()), 0);
