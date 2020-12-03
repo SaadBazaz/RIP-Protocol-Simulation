@@ -86,15 +86,31 @@ int main()
 	while(buff != "close")
 	{
 		sleep(2);
-		cout<<">> Enter the unique IP of the client you wish to talk to: ";
-		cin>>receiver;
+		cout << "Press 1 for Sending a message\nPress 2 for resolving a Domain Name\n";
+		int option = 0;
+		cin >> option;
+		string message ;
+		if(option == 1){
+			cout<<">> Enter the unique IP of the client you wish to talk to: ";
+			cin>>receiver;
 
-		memset(buff,0,128);
-		cout<<">> YOU: ";
-		cin.ignore();
-		fgets(buff,128,stdin);
-
-		string message = constructNewMessage(MESSAGE, myip, receiver, (void*)buff );
+			memset(buff,0,128);
+			cout<<">> Type you message : ";
+			cin.ignore();
+			fgets(buff,128,stdin);
+			message = constructNewMessage(MESSAGE, myip, receiver, (void*)buff );
+		}
+		else if(option == 2){
+			int DNS_IP = -1;
+			cout << "Enter DNS IP  : ";
+			cin >> DNS_IP;
+			cout << endl;
+			cout << "Enter Domain Name in the format [dom=<domain name>]\n>>";
+			cin.ignore();
+			fgets(buff,128,stdin);
+			message = constructNewMessage(MESSAGE, myip, DNS_IP, (void*)buff );
+		}
+		
 		send(sockfd,message.c_str(),message.size(),0);
 
 		if(strncmp(buff,"close",3) ==0 )
@@ -104,7 +120,7 @@ int main()
 
 		memset(buff,0,128);
 		recv(sockfd,buff,127,0);
-		printf("RecvBuff:%s\n",buff);
+		//printf("RecvBuff:%s\n",buff);
         printf("\n");
 	}
 	close(sockfd);

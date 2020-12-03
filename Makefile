@@ -3,7 +3,7 @@
 CC = g++
 CFLAGS  = -pthread -Wall -g -stdlib=libc++
 
-objects = Router Client
+objects = Router Client DNS
 all: $(objects)
 
 $(objects): %: %.cpp
