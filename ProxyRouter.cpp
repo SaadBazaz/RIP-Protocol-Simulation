@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string>
+#include <cstring>
 #include <assert.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
