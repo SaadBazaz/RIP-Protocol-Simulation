@@ -1,4 +1,4 @@
-# RIP_Implementation_Cpp
+# RIP-Protocol-Simulation
 A basic Routing Information Protocol (RIP) simulation in C++
 
 Authors: Muhammad Abdullah, Saad Bazaz
